@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style type="text/css">
+        *{margin:0px; padding:0px;}
+        body{font-size:20px;}
+        #app{width:1000px; margin:20px auto;}
+        #bigImg{float:left; margin-right:20px;}
+       .item{
+            width:140px;
+            line-height:30px;
+            box-sizing: border-box;
+            background:#ff99cc;
+            border:1px solid #000;
+            margin:10px 0px;
+            float:left;
+        }
+        .select{ border:1px solid darkred;}
+    </style>
+</head>
+<body>
+<div id="c1">
+    <img :src="img1" id="Img"/>
+    <p>颜色选型</p>
+    <div v-for="(item,index) in listFans" :class=['item',{'select':current==index}] @click="handleClick(index)">
+        {{item.name}}</div>
+</div>
+<script>
+    new Vue({
+        el:'#c1',
+        data:{
+            current:0,
+            img1:'img/1.png',
+            listFans:[{name:'蓝色电风扇',
+                img1:'img/1.png'},
+                {name:'粉色电风扇',
+                    img1:'img/2.png'},
+                {name:'白色电风扇',
+                    img1:'img/3.png'},
+                {name:'黑色电风扇',
+                    img1:'img/4.png'}]
+        },
+        methods:{
+            handleClick:function(index){
+                this.current = index;
+                this.img1 = this.listFans[index].img1;
+            }
+        }
+    })
+</script>
+</body>
+</html>

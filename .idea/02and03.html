@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link type="text/css" rel="stylesheet"/>
+        <style type="text/css">
+            #cartTable{margin:30px auto; border-collapse: collapse;}
+        #cartTable1{margin:30px auto; border-collapse: collapse;}
+        th,td{padding:5px 10px;border: 1px solid #e9e9e9;text-align: left;}
+        .txtCnt{width:30px; margin:0px 5px;}
+        button{padding:5px;}
+        .total{font-size:18px; color:darkred; font-weight:800;}
+        th {
+            background: #f7f7f7;
+            color: #5c6b77;
+            font-weight: 600;
+            white-space: nowrap
+        }
+        table {
+            border: 1px solid #e9e9e9;
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+        }
+        *{margin:0px;padding:0px;}
+        body{font-size:14px;}
+        th{font-size:18px; background:#f7f7f7; color:#5c6bee; font-weight:600;}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app" v-cloak>
+    <template v-if="list.length">
+        <table border="1" cellspacing="0" id="cartTable" >
+            <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" v-model="isAllChecked" @click="checkAll()">全选
+                </th>
+                <th>商品序号</th>
+                <th>商品编号</th>
+                <th>商品名称</th>
+                <th>商品数量</th>
+                <th>移出</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(item, index) in list" :key="index">
+                <td>
+                    <input type="checkbox" :value="item.id" v-model="item.isCheck" @click="checkOne(index)">
+                </td>
+                <td>{{index+1}}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price }}</td>
+                <td>
+                    <button @click="handleReduce(index)" :disabled="item.count === 1">
+                        -
+                    </button>
+                    {{ item.count }}
+                    <button @click="handleAdd(index)">+</button>
+                </td>
+                <td>
+                    <button @click="handleRemove(index)">移除</button>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr><!--购物车中有商品时显示-->
+                <td colspan="7">总价为：<span class="total">￥{{totalPrice}}</span>块</td>
+            </tr>
+            </tfoot>
+        </table>
+    </template>
+    <div v-else>
+        <table border="1" cellspacing="0" id="cartTable1">
+            <thead>
+            <tr>
+                <th></th>
+                <th>商品序号</th>
+                <th>商品编号</th>
+                <th>商品名称</th>
+                <th>商品数量</th>
+                <th>移出</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr><!--购物车中无商品时显示-->
+                <td colspan="7" style="text-align: center">此购物车中无商品</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    new Vue({
+        el:'#app',
+        data: {
+            list: [{
+                id: 1,
+                name: "iphone11",
+                price: 5499,
+                count: 1,
+                isCheck: false
+            },
+                {
+                    id: 2,
+                    name: "华为 Mate30 Pro",
+                    price: 3999,
+                    count: 1,
+                    isCheck: false
+                },
+                {
+                    id: 3,
+                    name: "红米k20pro尊享版",
+                    price: 3199,
+                    count: 1,
+                    isCheck: false
+                },
+                {
+                    id: 4,
+                    name: "oneplus7 Pro",
+                    price: 3999,
+                    count: 1,
+                    isCheck: false
+                }
+            ],
+            checkAllList: [],
+            isAllChecked: false
+        },
+        computed: {
+            totalPrice: function () {
+                var total = 0;
+                for (var i = 0; i < this.list.length; i++) {
+                    if (this.list[i].isCheck) {
+                        var item = this.list[i];
+                        total += item.price * item.count;
+                    }
+                }
+                return total.toString().replace(/\B(?=(\d{3})+$)/g, ",");
+            }
+        },
+
+        methods: {
+            handleReduce: function (index) {
+                if (this.list[index].count === 1) return;
+                this.list[index].count--;
+            },
+            handleAdd: function (index) {
+                this.list[index].count++;
+            },
+            handleRemove: function (index) {
+                this.list.splice(index, 1);
+            },
+            checkOne: function (index) {
+                if (this.list[index].isCheck === false) {
+                    this.list[index].isCheck = true;
+                } else {
+                    this.list[index].isCheck = false;
+                    this.isAllChecked = false;
+                }
+            },
+            checkAll: function (item) {
+                if (this.isAllChecked === false) {
+                    for (var i = 0; i < this.list.length; i++) {
+                        var item = this.list[i];
+                        item.isCheck = true;
+                    }
+                } else {
+                    for (var i = 0; i < this.list.length; i++) {
+                        var item = this.list[i];
+                        item.isCheck = false;
+                    }
+                }
+                this.isAllChecked = !this.isAllChecked;
+            }
+        }
+    });
+</script>
+</body>
+</html>
